@@ -1,42 +1,287 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg-primary: #0a0a0a;
+  --color-bg-surface: #1a1a1a;
+  --color-bg-cell: #1c1c1c;
+  --color-bg-cell-hover: #242424;
+  --color-bg-cell-today: #2a2a2a;
+  --color-bg-header: #111111;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #8a8a8a;
+  --color-text-muted: #555555;
+  --color-border: #2a2a2a;
+  --color-border-subtle: #222222;
+  --color-accent-primary: #6B6BFF;
+  --color-accent-primary-subtle: #6B6BFF44;
+  --color-accent-error: #ef4444;
+  --color-accent-default-sub: #8B5CF6;
+  --color-accent-monthly: #f97316;
+  --color-accent-monthly-subtle: #f9731622;
+  --color-accent-yearly: #84cc16;
+  --color-accent-yearly-subtle: #84cc1622;
+  --color-popup-bg: #1e1e1e;
+  --color-popup-border: #333333;
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+:root[data-theme="light"] {
+  --bg-primary: #f5f5f7;
+  --bg-surface: #ffffff;
+  --bg-cell: #f0f0f2;
+  --bg-cell-hover: #e8e8ea;
+  --bg-cell-today: #e0e0ff;
+  --bg-header: #ffffff;
+  --text-primary: #0a0a0a;
+  --text-secondary: #555555;
+  --text-muted: #999999;
+  --border-color: #e0e0e0;
+  --border-subtle: #ececec;
+  --popup-bg: #ffffff;
+  --popup-border: #e0e0e0;
+  --popup-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+:root[data-theme="dark"],
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --bg-primary: #0a0a0a;
+  --bg-surface: #141414;
+  --bg-cell: #1c1c1c;
+  --bg-cell-hover: #242424;
+  --bg-cell-today: #2d2d2d;
+  --bg-header: #111111;
+  --text-primary: #ffffff;
+  --text-secondary: #8a8a8a;
+  --text-muted: #555555;
+  --border-color: #2a2a2a;
+  --border-subtle: #222222;
+  --popup-bg: #1e1e1e;
+  --popup-border: #333333;
+  --popup-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
 
 * {
   box-sizing: border-box;
-  padding: 0;
   margin: 0;
+  padding: 0;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+html,
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  min-height: 100vh;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Smooth transitions */
+button {
+  transition: opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-accent-primary-subtle);
+  color: var(--text-primary);
+}
+
+/* Day popup animation */
+@keyframes popup-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+.day-popup {
+  animation: popup-in 0.12s ease forwards;
+}
+
+/* Number input arrows */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 0.5;
+}
+
+/* Select styling */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8a8a' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px !important;
+}
+
+@layer components {
+  /* ── Buttons ─────────────────────────────────── */
+
+  .btn-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background-color: var(--color-accent-primary);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: opacity 0.15s;
+
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+
+  .btn-ghost {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--bg-cell);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+
+  .btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    color: var(--text-secondary);
+    transition: color 0.15s;
+
+    &:hover {
+      color: var(--text-primary);
+    }
+  }
+
+  .btn-danger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-accent-error);
+    display: flex;
+    align-items: center;
+    padding: 4px;
+  }
+
+  /* ── Color indicators ────────────────────────── */
+
+  .color-dot {
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .color-dot-monthly {
+    background-color: var(--color-accent-monthly);
+  }
+
+  .color-dot-yearly {
+    background-color: var(--color-accent-yearly);
+  }
+
+  /* ── Modal ───────────────────────────────────── */
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    padding: 16px;
+  }
+
+  .modal-panel {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 85vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--popup-shadow);
+  }
+
+  /* ── Forms ───────────────────────────────────── */
+
+  .form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .form-input {
+    width: 100%;
+    background-color: var(--bg-cell);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: var(--text-primary);
+    font-size: 14px;
+    outline: none;
+  }
+
+  .form-error {
+    color: var(--color-accent-error);
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  /* ── Service picker ──────────────────────────── */
+
+  .service-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background-color: var(--bg-cell);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    color: var(--text-primary);
+    text-align: left;
+    transition: background-color 0.15s;
+
+    &:hover {
+      background-color: var(--bg-cell-hover);
+    }
   }
 }
